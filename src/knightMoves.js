@@ -17,6 +17,9 @@ export default class Board {
 		this.board[target[0]][target[1]].distance = 0;
 
 		this.printBoard();
+		const sum = new Vector(1, 2) - new Vector(2, 5);
+		console.log(sum);
+		console.log(new Vector(sum));
 	}
 
 	printBoard(prop = "distance") {
@@ -28,6 +31,19 @@ export default class Board {
 			console.log(rowStr);
 		});
 	}
+
+	nextTiles(tile) {
+		const x = tile.x;
+		const y = tile.y;
+
+		const results = [];
+
+		const vec = new Vector();
+		for (let i = 0; i < 8; i++) {
+			console.log(vec);
+			vec.switche();
+		}
+	}
 }
 
 class Tile {
@@ -36,6 +52,65 @@ class Tile {
 		this.y = y;
 		this.distance = null;
 		this.predecessor = null;
+	}
+}
+
+class Vector {
+	constructor(x, y) {
+		console.log(x, " ", y);
+		if (typeof y == "undefined") {
+			console.log("calcoleting");
+			//if the b value is not passed in, assume a is the hash of a vector
+			this.y = x % 67108864;
+			this.x = (x - this.y) / 67108864;
+		} else {
+			//if b value is passed in, assume the x and the y coordinates are the constructors
+			this.x = x;
+			this.y = y;
+		}
+		this.hash;
+	}
+
+	valueOf() {
+		this.pack();
+		return this.hash;
+	}
+
+	pack() {
+		this.hash =
+			this.y * 67108864 + (this.x < 0 ? 33554432 | this.x : this.x);
+	}
+
+	unpack() {
+		switch (((this.hash & 33554432) !== 0) * 1 + (this.hash < 0) * 2) {
+			case 0:
+				return [this.hash % 33554432, Math.trunc(this.hash / 67108864)];
+				break;
+			case 1:
+				return [
+					(this.hash % 33554432) - 33554432,
+					Math.trunc(this.hash / 67108864) + 1,
+				];
+				break;
+			case 2:
+				return [
+					(((this.hash + 33554432) % 33554432) + 33554432) % 33554432,
+					Math.round(this.hash / 67108864),
+				];
+				break;
+			case 3:
+				return [this.hash % 33554432, Math.trunc(this.hash / 67108864)];
+				break;
+		}
+	}
+
+	switche() {
+		const temp = this.y;
+		this.y = this.x;
+		this.x = temp;
+	}
+	toggle() {
+		this.y = -this.y;
 	}
 }
 
