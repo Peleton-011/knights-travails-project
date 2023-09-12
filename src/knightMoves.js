@@ -1,5 +1,24 @@
-export default function knightMoves(start, target) {
-    return start + " to " + target
+export default class Board {
+	board = [];
+	constructor(size) {
+		for (let i = 0; i < size; i++) {
+			const curr = [];
+			for (let j = 0; j < size; j++) {
+				curr.push(new Tile(i, j));
+			}
+			this.board.push(curr);
+		}
+	}
+	knightMoves(start, target) {
+		return start + " to " + target;
+	}
+}
+
+class Tile {
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
+	}
 }
 
 class Tree {
@@ -22,7 +41,7 @@ class Tree {
 
 		const middle = Math.round((start + end) / 2);
 		// console.log(middle, ", ", arr[middle]);
-		return new Node(
+		return new Tile(
 			arr[middle],
 			this.buildTree(arr, start, middle - 1),
 			this.buildTree(arr, middle + 1, end)
@@ -58,7 +77,7 @@ class Tree {
 			if (Number(value) === curr.value) return;
 
 			if (curr[next] === null) {
-				curr[next] = new Node(Number(value));
+				curr[next] = new Tile(Number(value));
 				return;
 			}
 			curr = curr[next];
@@ -278,43 +297,5 @@ class Tree {
 		dataArr = this.curateArr(dataArr);
 		this._root = this.buildTree(dataArr, 0, dataArr.length - 1);
 		// this.prettyPrint(this._root)
-	}
-}
-
-class Node {
-	/**
-	 * @param {any} val
-	 */
-	set value(val) {
-		this._value = val;
-	}
-	get value() {
-		return this._value;
-	}
-
-	constructor(val, left, right) {
-		this._value = val || null;
-		this._right = right || null;
-		this._left = left || null;
-	}
-
-	/**
-	 * @param {Node} right
-	 */
-	set right(right) {
-		this._right = right;
-	}
-	get right() {
-		return this._right;
-	}
-
-	/**
-	 * @param {Node} left
-	 */
-	set left(left) {
-		this._left = left;
-	}
-	get left() {
-		return this._left;
 	}
 }
