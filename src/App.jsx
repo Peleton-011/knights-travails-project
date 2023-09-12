@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import ControlPanel from "./components/ControlPanel";
+import knightMoves from "./knightMoves";
 
 function App() {
 	function setAnswer(ans) {
@@ -11,7 +12,7 @@ function App() {
 		functionList: [
 			{
 				func: (input) => {
-					console.log("test");
+					return knightMoves(...input.split(";"));
 				},
 				funcName: "test",
 				inputName: "",

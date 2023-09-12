@@ -1,4 +1,8 @@
-export default class Tree {
+export default function knightMoves(start, target) {
+    return start + " to " + target
+}
+
+class Tree {
 	get root() {
 		return this._root;
 	}
