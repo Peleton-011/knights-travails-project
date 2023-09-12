@@ -11,14 +11,16 @@ export default class Board {
 	}
 	knightMoves(start, target) {
 		console.log(start + " to " + target);
-		start = [...start.split(",")];
-		target = [...target.split(",")];
+		start = [...start.split(",")].map((n) => Number(n));
+		target = [...target.split(",")].map((n) => Number(n));
 
 		this.board[target[0]][target[1]].distance = 0;
 
 		this.printBoard();
-		this.nextTiles(this.board[start[0]][start[1]]);
-		console.log(V(67108863));
+
+		let nextTiles = this.nextTiles(this.board[start[0]][start[1]]);
+		nextTiles = nextTiles.map((e) => this.squareDistanceTo(e, target));
+		console.log(nextTiles);
 	}
 
 	printBoard(prop = "distance") {
@@ -31,23 +33,26 @@ export default class Board {
 		});
 	}
 
+	squareDistanceTo(vecArr, target) {
+		// console.log(vecArr, " ", target);
+		return (target[0] - vecArr[0]) ** 2 + (target[1] - vecArr[1]) ** 2;
+	}
+
 	nextTiles(tile) {
 		const tileVec = V(tile.x, tile.y);
 
-		console.log(tileVec);
+		// console.log(tileVec);
 		const results = [];
 
 		const vec = V(1, 2);
 		for (let i = 0; i < 4; i++) {
-			console.log(vec);
-			results.push(V(vec + tileVec));
+			results.push(V(vec + tileVec).arr);
 			vec.switche();
-			console.log(vec);
-			results.push(V(vec + tileVec));
+			results.push(V(vec + tileVec).arr);
 			vec.toggle();
 		}
 
-		console.log(results);
+		return results;
 	}
 }
 
@@ -124,14 +129,18 @@ class Vector {
 	}
 
 	switche() {
-        this.unpack()
+		this.unpack();
 		const temp = this.y;
 		this.y = this.x;
 		this.x = temp;
 	}
 	toggle() {
-        this.unpack()
+		this.unpack();
 		this.y = -this.y;
+	}
+
+	get arr() {
+		return [this.x, this.y];
 	}
 }
 
