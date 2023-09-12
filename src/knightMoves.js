@@ -52,7 +52,13 @@ export default class Board {
 			vec.toggle();
 		}
 
-		return results;
+		return results.filter(
+			(coords) =>
+				coords[0] < 8 &&
+				coords[0] > -1 &&
+				coords[1] < 8 &&
+				coords[1] > -1
+		);
 	}
 }
 
