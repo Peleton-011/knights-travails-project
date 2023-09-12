@@ -10,7 +10,23 @@ export default class Board {
 		}
 	}
 	knightMoves(start, target) {
-		return start + " to " + target;
+		console.log(start + " to " + target);
+		start = [...start.split(",")];
+		target = [...target.split(",")];
+
+		this.board[target[0]][target[1]].distance = 0;
+
+		this.printBoard();
+	}
+
+	printBoard(prop = "distance") {
+		this.board.forEach((row) => {
+			let rowStr = "";
+			row.forEach((tile) => {
+				rowStr += tile[prop] + " ";
+			});
+			console.log(rowStr);
+		});
 	}
 }
 
