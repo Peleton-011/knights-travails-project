@@ -9,6 +9,7 @@ export default class Board {
 			this.board.push(curr);
 		}
 	}
+
 	knightMoves(start, target) {
 		console.log(start + " to " + target);
 		start = [...start.split(",")].map((n) => Number(n));
@@ -16,18 +17,59 @@ export default class Board {
 
 		this.board[target[0]][target[1]].distance = 0;
 
-		this.printBoard();
+		// this.printBoard();
 
-		let nextTiles = this.nextTiles(this.board[start[0]][start[1]]);
-		nextTiles = nextTiles.map((e) => this.squareDistanceTo(e, target));
-		console.log(nextTiles);
+		const moveQueue = new Queue(this.board[target[0]][target[1]]);
+
+		let nextTiles = [[1, 1]];
+
+		while (!moveQueue.isEmpty() && !(nextTiles[0][2] === 0)) {
+			const curr = moveQueue.dequeue();
+			console.log("curr: ", curr);
+			//Get next possible tiles
+			nextTiles = this.nextTiles(curr);
+			//Enqueue
+			nextTiles.forEach((coords) => {
+				moveQueue.enqueue(this.board[coords[0]][coords[1]]);
+				this.board[coords[0]][coords[1]].distance = curr.distance + 1;
+				this.board[coords[0]][coords[1]].predecessor = curr;
+			});
+			//Get distances and sort based on that
+			nextTiles = nextTiles
+				.map((e) => [
+					...e,
+					Math.abs(this.squareDistanceTo(e, start) - 5),
+				])
+				.sort((a, b) => a[2] - b[2]);
+
+			console.log(nextTiles);
+
+			//Check if the target has been reached
+			if (nextTiles[0][2] === 0) {
+				this.printBoard();
+				const arr = [
+					start,
+					this.board[nextTiles[0][0]][nextTiles[0][1]],
+				];
+				let current = arr[1];
+				console.log(arr);
+				while (current.x !== target[0] && current.y !== target[1]) {
+					current = arr[arr.length - 1].predecessor;
+					console.log(current);
+					arr.push(current);
+				}
+				return arr;
+			}
+		}
 	}
 
-	printBoard(prop = "distance") {
+	printBoard(prop = "predecessor") {
 		this.board.forEach((row) => {
 			let rowStr = "";
 			row.forEach((tile) => {
-				rowStr += tile[prop] + " ";
+				rowStr += tile[prop]
+					? [tile[prop].x, tile[prop].y] + " "
+					: "NUL ";
 			});
 			console.log(rowStr);
 		});
@@ -41,7 +83,7 @@ export default class Board {
 	nextTiles(tile) {
 		const tileVec = V(tile.x, tile.y);
 
-		// console.log(tileVec);
+		console.log([tileVec.x, tileVec.y]);
 		const results = [];
 
 		const vec = V(1, 2);
@@ -152,6 +194,10 @@ class Vector {
 
 class Queue {
 	_queue = [];
+
+	constructor(initial) {
+		this.enqueue(initial);
+	}
 
 	enqueue(obj) {
 		this._queue.push(obj);
