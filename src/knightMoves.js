@@ -30,9 +30,17 @@ export default class Board {
 			nextTiles = this.nextTiles(curr);
 			//Enqueue
 			nextTiles.forEach((coords) => {
-				moveQueue.enqueue(this.board[coords[0]][coords[1]]);
-				this.board[coords[0]][coords[1]].distance = curr.distance + 1;
-				this.board[coords[0]][coords[1]].predecessor = curr;
+				const next = this.board[coords[0]][coords[1]];
+				if (
+					next.distance >
+					curr.distance + 1
+					//	next.distance === null
+				) {
+					console.log(next);
+					moveQueue.enqueue(next);
+					next.distance = curr.distance + 1;
+					next.predecessor = curr;
+				}
 			});
 			//Get distances and sort based on that
 			nextTiles = nextTiles
@@ -53,7 +61,7 @@ export default class Board {
 				];
 				let current = arr[1];
 				console.log(arr);
-				while (current.x !== target[0] && current.y !== target[1]) {
+				while (!(current.x === target[0] && current.y === target[1])) {
 					current = arr[arr.length - 1].predecessor;
 					console.log(current);
 					arr.push(current);
@@ -108,7 +116,7 @@ class Tile {
 	constructor(x, y) {
 		this.x = x;
 		this.y = y;
-		this.distance = null;
+		this.distance = 20;
 		this.predecessor = null;
 	}
 }

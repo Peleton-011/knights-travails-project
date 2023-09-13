@@ -8,7 +8,7 @@ function App() {
 		console.log(ans);
 	}
 
-    const board = new Board(8)
+	let board = new Board(8);
 
 	const controlPanelData = {
 		functionList: [
@@ -16,7 +16,14 @@ function App() {
 				func: (input) => {
 					return board.knightMoves(...input.split(";"));
 				},
-				funcName: "test",
+				funcName: "find",
+				inputName: "",
+			},
+			{
+				func: () => {
+					board = new Board(8);
+				},
+				funcName: "reset",
 				inputName: "",
 			},
 		],
